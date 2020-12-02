@@ -1,6 +1,6 @@
 defmodule AdventOfCode.One do
   def part_1() do
-    "priv/one.part_1.txt"
+    "priv/01.part_1.txt"
     |> File.read!()
     |> part_1()
   end
