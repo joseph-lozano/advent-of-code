@@ -1,5 +1,5 @@
 defmodule AdventOfCode do
-  alias AdventOfCode.{One, Two, Three}
+  alias AdventOfCode.{One, Two, Three, Four}
 
   def run(day, part) do
     day_mod =
@@ -7,6 +7,7 @@ defmodule AdventOfCode do
         1 -> One
         2 -> Two
         3 -> Three
+        4 -> Four
       end
 
     case part do
