@@ -46,7 +46,6 @@ defmodule AdventOfCode.Four do
   def valid_part_2?(passport) do
     Enum.all?(@required_fields, fn f ->
       valid = f in Map.keys(passport) and valid_data?(passport[f], f)
-      if valid, do: IO.puts("#{valid}: #{f} => #{passport[f]}")
       valid
     end)
   end
