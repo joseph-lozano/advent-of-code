@@ -75,17 +75,17 @@ defmodule AdventOfCode.Eleven do
   end
 
   defp transform(grid, _prev, neighbors_fn, threshold) when is_map(grid) do
-    squares = Map.keys(grid)
-    {width, _} = Enum.max_by(squares, fn {x, _y} -> x end)
-    {_, height} = Enum.max_by(squares, fn {_x, y} -> y end)
+    Enum.reduce(grid, %{}, fn {{x, y}, square}, acc ->
+      transformed_square =
+        if square == "." do
+          "."
+        else
+          neighbors = neighbors_fn.(grid, x, y)
+          transform(square, neighbors, threshold)
+        end
 
-    for y <- 0..height, x <- 0..width do
-      square = at(grid, x, y)
-      neighbors = neighbors_fn.(grid, x, y)
-      transform(square, neighbors, threshold)
-    end
-    |> Enum.chunk_every(width + 1)
-    |> to_map()
+      Map.put(acc, {x, y}, transformed_square)
+    end)
     |> transform(grid, neighbors_fn, threshold)
   end
 
