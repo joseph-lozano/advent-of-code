@@ -10,10 +10,10 @@ defmodule AdventOfCode.Eleven do
       input
       |> String.split()
       |> Enum.map(&String.graphemes/1)
+      |> to_map()
 
     transform(grid, nil, &neighbors/3, 4)
-    |> List.flatten()
-    |> Enum.count(&(&1 == "#"))
+    |> Enum.count(fn {_key, val} -> val == "#" end)
   end
 
   def part_2() do
@@ -27,10 +27,25 @@ defmodule AdventOfCode.Eleven do
       input
       |> String.split()
       |> Enum.map(&String.graphemes/1)
+      |> to_map()
 
     transform(grid, nil, &visible_neighbors/3, 5)
-    |> List.flatten()
-    |> Enum.count(&(&1 == "#"))
+    |> Enum.count(fn {_key, val} -> val == "#" end)
+  end
+
+  defp to_map(grid) do
+    grid
+    |> Enum.with_index()
+    |> Enum.reduce(%{}, fn {row, y}, row_acc ->
+      Map.merge(
+        row_acc,
+        row
+        |> Enum.with_index()
+        |> Enum.reduce(%{}, fn {square, x}, acc ->
+          Map.put(acc, {x, y}, square)
+        end)
+      )
+    end)
   end
 
   defp visible_neighbors(grid, x, y) do
@@ -59,16 +74,18 @@ defmodule AdventOfCode.Eleven do
     grid
   end
 
-  defp transform(grid, _prev, neighbors_fn, threshold) when is_list(grid) do
-    width = grid |> hd() |> length()
-    height = grid |> length()
+  defp transform(grid, _prev, neighbors_fn, threshold) when is_map(grid) do
+    squares = Map.keys(grid)
+    {width, _} = Enum.max_by(squares, fn {x, _y} -> x end)
+    {_, height} = Enum.max_by(squares, fn {_x, y} -> y end)
 
-    for y <- 0..(height - 1), x <- 0..(width - 1) do
+    for y <- 0..height, x <- 0..width do
       square = at(grid, x, y)
       neighbors = neighbors_fn.(grid, x, y)
       transform(square, neighbors, threshold)
     end
-    |> Enum.chunk_every(width)
+    |> Enum.chunk_every(width + 1)
+    |> to_map()
     |> transform(grid, neighbors_fn, threshold)
   end
 
@@ -94,24 +111,6 @@ defmodule AdventOfCode.Eleven do
   end
 
   defp at(grid, x, y) do
-    grid
-    |> at(y)
-    |> at(x)
-  end
-
-  defp at(_enum, index) when index < 0 do
-    nil
-  end
-
-  defp at(nil, _) do
-    nil
-  end
-
-  defp at(_, nil) do
-    nil
-  end
-
-  defp at(enum, index) do
-    Enum.at(enum, index)
+    Map.get(grid, {x, y})
   end
 end
