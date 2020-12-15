@@ -16,7 +16,6 @@ defmodule AdventOfCode.Fifteen do
     else
       do_play(nums, until)
       |> elem(1)
-      |> hd()
       |> elem(0)
     end
   end
@@ -26,21 +25,24 @@ defmodule AdventOfCode.Fifteen do
 
     map =
       nums
-      |> Enum.map(fn {num, index} -> {num, [index]} end)
+      |> Enum.map(fn {num, index} -> {num, {index}} end)
       |> Enum.into(%{})
 
-    Enum.reduce(length(nums)..(until - 1), {map, nums}, fn
-      el, {map, [{last_num, last_index} | _] = nums} ->
+    Enum.reduce(length(nums)..(until - 1), {map, hd(nums)}, fn
+      el, {map, {last_num, last_index}} ->
         distance =
           case Map.get(map, last_num) do
-            nil -> raise "todo"
-            [last_time] -> last_index - last_time
-            [last_time | [prev_time | _]] -> last_time - prev_time
+            {last_time} -> last_index - last_time
+            {last_time, prev_time} -> last_time - prev_time
           end
 
-        new_map = Map.update(map, distance, [el], fn old -> [el | old] end)
+        new_map =
+          Map.update(map, distance, {el}, fn
+            {old} -> {el, old}
+            {old, _prev} -> {el, old}
+          end)
 
-        {new_map, [{distance, el} | nums]}
+        {new_map, {distance, el}}
     end)
   end
 
