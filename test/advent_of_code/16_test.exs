@@ -27,8 +27,8 @@ defmodule AdventOfCode.SixteenTest do
   end
 
   describe "part 2" do
-    test "example" do
-      assert 11 * 12 * 13 == Sixteen.part_2()
+    test "real" do
+      assert 2_766_491_048_287 == Sixteen.part_2()
     end
   end
 end
