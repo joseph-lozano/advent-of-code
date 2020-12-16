@@ -15,8 +15,7 @@ defmodule AdventOfCode.TwelveTest do
   end
 
   test "part 1 real" do
-    assert 1319 <
-             Twelve.part_1()
+    assert 1319 < Twelve.part_1()
   end
 
   test "part 2" do
