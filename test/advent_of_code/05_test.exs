@@ -1,5 +1,5 @@
 defmodule AdventOfCode.FiveTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   alias AdventOfCode.Five
 
   test "part 1" do

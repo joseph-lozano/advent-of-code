@@ -1,5 +1,5 @@
 defmodule AdventOfCode.TenTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   alias AdventOfCode.Ten
 
   @input_a """

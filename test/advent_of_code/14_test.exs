@@ -1,5 +1,5 @@
 defmodule AdventOfCode.FourteenTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   alias AdventOfCode.Fourteen
 
   @example """
